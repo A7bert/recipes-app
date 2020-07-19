@@ -1,24 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+
+import Recipe from './Recipe'
 import './App.css';
 
-function App() {
+const App = () => {
+
+  const APP_ID = '058f745a'
+  const APP_KEY = '7d962edeb5408a1b52fe58207c62dcda'
+
+  const exampleReq = `https://api.edamam.com/search?q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}`
+
+  const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('chicken');
+
+  useEffect(() => {
+    getRecipes();
+    console.log('lets say we are fetching data')
+  }, [query]);
+
+  const getRecipes = async () => {
+    const response = await fetch(
+      `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`
+    );
+    const data = await response.json();
+    setRecipes(data.hits);
+  }
+
+  const updateSearch = e => {
+    setSearch(e.target.value);
+    console.log(search)
+  }
+
+  const getSearch = e => {
+    e.preventDefault();
+    setQuery(search);
+    setSearch('')
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <form onSubmit={getSearch} className='searchForm'>
+        <input className='searchBar' type='text' value={search} onChange={updateSearch} />
+        <button className='searchButton' type='submit'>
+          Search
+        </button>
+      </form>
+      {
+        recipes.map((recipe, index) => (
+          <Recipe 
+            key={index + recipe.recipe.label} 
+            title={recipe.recipe.label}
+            calories={recipe.recipe.calories}
+            image={recipe.recipe.image} />  
+        ))
+      }
     </div>
   );
 }
