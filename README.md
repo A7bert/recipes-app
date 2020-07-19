@@ -1,4 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# recipes-app
+
+A simple app that helps me to get familiar with React 16. And maybe I could hook it with other recipe APIs.
+
 
 ## Available Scripts
 
